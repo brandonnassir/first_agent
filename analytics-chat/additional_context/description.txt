@@ -1,0 +1,106 @@
+Description of Data in High School Graduation Rate 2025 Downloadable Access Database
+
+Updated: 12/1/25
+Page 1 of 4
+
+This document describes the tables contained in GRAD_RATE_AND_OUTCOMES_2025.mdb in which data about outcomes of designated subgroups are reported by total public school (aggregated data for all districts and charter schools), county (aggregated data for all districts and charter schools in the county), Needs-to-Resource-Capacity (N/RC) group, district, and public schools. Please use this document to locate desired information in the tables of the same name in the High School Graduation Rate Database. In some cases, values may be stored as text items of length 255. This is an Access artifact. The content is of much shorter, but varying length, and usually formatted for presentation. To ensure student confidentiality, the Department does not publish data for groups with fewer than five students or data that would allow readers to easily determine the performance of a group with fewer than five students. When there were fewer than five students in a group (e.g., Hispanic), outcomes for those students were suppressed for that group and the next smallest group. Suppressed data are indicated with a "-" and are formatted as character variables. If computations are to be performed with these numbers, please use the Val() function in any Access expressions to convert to a numeric data type. For additional information about business rules, variables, and suppression see the Glossary and Business Rules documents posted on data.nysed.gov.
+
+LEA_BEDS
+
+The LEA_BEDS in the following tables is the 12-digit Basic Educational Data System (BEDS) code that uniquely identifies the entity (school, district, etc.). The following information may be useful to researchers who want to select or aggregate data for specific entities.
+
+Digits -> Indicate
+1-2    -> County of Location
+3-4    -> City/Town of Location
+5-6    -> School District Number
+7-8    -> District or LEA Type
+9-12   -> Reserved for Building
+
+When -> Then
+Digit 1 = 3         -> Entity = New York City School/District and Digits 3 & 4 indicate New York City Community School District
+Digits 7 & 8 = 86   -> Entity = Charter School
+Digits 9-12 = 0000  -> Entity = District
+
+
+Updated: 12/1/25
+Page 2 of 4
+
+NRC_CODE
+
+An NRC_CODE is a Need to Resource Capacity Category code that is a measure of district's ability to meet the needs of its students with local resources is the ratio of the estimated poverty percentage1 (expressed in standard score form) to the Combined Wealth Ratio2 (expressed in standard score form). A district with both estimated poverty and Combined Wealth Ratio equal to the State average would have a need/resource capacity index of 1.0. Need/Resource Capacity (N/RC) categories are determined from this index using the definitions in the table below. (Source)
+
+Code | Category | Definition
+1 | High N/RC: New York City | New York City
+2 | High N/RC: Large City Districts | Buffalo, Rochester, Syracuse, Yonkers
+3 | High N/RC: Urban-Suburban Districts | All districts at or above the 70th percentile (1.1835) that have:
+  1. At least 100 students per square mile; or
+  2. an enrollment greater than 2,500 and more than 50 students per square mile.
+4 | High N/RC: Rural Districts | All districts at or above the 70th percentile (1.1835) that have:
+  1. Fewer than 50 students per square mile;
+  2. or fewer than 100 students per square mile and an enrollment of less than 2,500.
+5 | Average N/RC Districts | All districts between the 20th (0.770) and 70th (1.1835) percentile on the index.
+6 | Low N/RC Districts | All districts below the 20th percentile (0.770) on the index.
+7 | Charter Schools3 | Charter Schools
+
+1 Estimated Poverty Percentage: A weighted average of the 2006-07 and 2007-08 kindergarten through grade 6 free-and reduced-price-lunch percentage and the percentage of children aged 5 to 17 in poverty according to the 2000 Decennial Census. (An average was used to mitigate errors in each measure.) The result is a measure that approximates the percentage of children eligible for free or reduced-price lunches.
+2 Combined Wealth Ratio: The ratio of district wealth per pupil to State average wealth per pupil, used in the 2007-08 Governor's proposal.
+3 All Charter Schools, including those located in NYC, are reported with NRC Code 7.
+
+
+Updated: 12/1/25
+Page 3 of 4
+
+Table: GRAD_RATE_AND_OUTCOMES_2025
+
+NAME | DESCRIPTION | TYPE | SIZE
+REPORT_SCHOOL_YEAR | School Year in which the data was collected. | Text | 255
+AGGREGATION_INDEX | Numeric index assigned to assist in aggregating data at Statewide (0), Need/Resource Category (1), County (2), District (3) and School (4). | Number | 1
+AGGREGATION_TYPE | Aggregation type description. | Text | 255
+INSTITUTION_ID | 12-digit unique identifier for each institution - a code that remains consistent over time, unlike the ENTIT_CD (BEDS Code) which updates with changes in location or district assignment, for example. Only reported for records where AGGREGATION_INDEX = 3 or 4. | Text | 12
+AGGREGATION_CODE | Codes include N/RC codes (0-7) and BEDS codes for counties, districts, and schools. | Text | 12
+AGGREGATION_NAME | The name of the entity (district or school). | Text | 255
+LEA_BEDS | 12-digit code for public schools statewide, by county, by N/RC group, for public school districts, public schools, and charter schools. | Text | 12
+LEA_NAME | LEA name. | Text | 255
+NRC_CODE | Needs to Resource Capacity code. | Number | 1
+NRC_DESC | Description of the N/RC. | Text | 255
+COUNTY_CODE | 2-digit county code. | Text | 2
+COUNTY_NAME | County name. | Text | 255
+NYC_IND | Index indicating whether the county, LEA, School, or Charter School is in New York City (0/1). | Text | 1
+BOCES_CODE | 4-digit code of the BOCES. | Text | 4
+BOCES_NAME | Name of the BOCES. | Text | 255
+MEMBERSHIP_CODE | 1 or 2-digit code designating the cohort membership being reported and corresponding membership description. | Number | 2
+
+MEMBERSHIP_CODE -> MEMBERSHIP_DESCRIPTION
+6  -> 6-year outcome, June
+8  -> 5-year outcome, June
+9  -> 4-year outcome, June
+10 -> 5-year outcome, August
+11 -> 4-year outcome, August
+18 -> 6-year outcome, August
+
+MEMBERSHIP_DESC | Description of the cohort membership. | Text | 255
+
+
+Updated: 12/1/25
+Page 4 of 4
+
+NAME | DESCRIPTION | TYPE | SIZE
+SUBGROUP_CODE | 2-digit code identifying the various demographic subgroups. | Number | 2
+SUBGROUP_NAME | Name of subgroup. For further information on subgroups, see the Graduation Rate Glossary of Terms on data.nysed.gov. | Text | 255
+ENROLL_CNT | Count of students in the cohort based on the last enrollment record as of June 30, 2023, with a First Date of Entry into Grade 9 during the 2019-20 school year, regardless of their current grade level. | Text | 255
+GRAD_CNT | Number of students in the cohort who earned either a Regents or Local diploma. | Text | 255
+GRAD_PCT | Percent of students in the cohort who earned either a Regents or Local diploma. | Number | 255
+LOCAL_CNT | Number of students in the cohort who earned a Local diploma. | Text | 255
+LOCAL_PCT | Percent of students in the cohort who earned a Local diploma. | Number | 255
+REG_CNT | Number of students in the cohort who earned a Regents diploma. | Text | 255
+REG_PCT | Percent of students in the cohort who earned a Regents diploma. | Number | 255
+REG_ADV_CNT | Number of students in the cohort who earned a Regents diploma with Advanced Designation. | Text | 255
+REG_ADV_PCT | Percent of students in the cohort who earned a Regents diploma with Advanced Designation. | Number | 255
+NON_DIPLOMA_CREDENTIAL_CNT | Number of students in the cohort who earned a non-diploma commencement credential (i.e., CDOS credential, Skills & Achievement certificate). | Text | 255
+NON_DIPLOMA_CREDENTIAL_PCT | Percent of students in the cohort who earned a non-diploma commencement credential (i.e., CDOS credential, Skills & Achievement certificate). | Number | 255
+STILL_ENR_CNT | Number of students in the cohort who were still enrolled as of June 30. | Text | 255
+STILL_ENR_PCT | Percent of students in the cohort who were still enrolled as of June 30. | Number | 255
+GED_CNT | Number of students in the cohort who entered an approved high school equivalency preparation program. | Text | 255
+GED_PCT | Percent of students in the cohort who entered an approved high school equivalency preparation program. | Number | 255
+DROPOUT_CNT | Number of students who dropped out. | Text | 255
+DROPOUT_PCT | Percent of students who dropped out. | Number | 255

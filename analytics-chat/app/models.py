@@ -15,6 +15,10 @@ class ColumnMeta(BaseModel):
     is_nullable: bool = True
     is_primary_key: bool = False
     sample_values: list[Any] = Field(default_factory=list)
+    distinct_values: Optional[list[Any]] = Field(
+        default=None,
+        description="All distinct values for low-cardinality categorical columns",
+    )
 
 
 class ForeignKeyMeta(BaseModel):

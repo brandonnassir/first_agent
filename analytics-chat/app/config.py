@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 
@@ -22,7 +23,7 @@ class DBConfig:
     @property
     def url(self) -> str:
         return (
-            f"postgresql+psycopg2://{self.user}:{self.password}"
+            f"postgresql+psycopg2://{quote_plus(self.user)}:{quote_plus(self.password)}"
             f"@{self.host}:{self.port}/{self.database}"
         )
 

@@ -132,6 +132,20 @@ if run_btn and question.strip():
     with tab_answer:
         st.subheader("Analysis Summary")
         st.markdown(response.analysis_summary)
+
+        if response.df is not None and not response.df.empty:
+            st.subheader("Result")
+            if response.df.shape[0] <= 5 and response.df.shape[1] <= 4:
+                for _, row in response.df.iterrows():
+                    cols = st.columns(len(row))
+                    for col_widget, (col_name, val) in zip(cols, row.items()):
+                        display_val = val
+                        if isinstance(val, float):
+                            display_val = f"{val:,.2f}"
+                        col_widget.metric(label=str(col_name).replace("_", " ").title(), value=display_val)
+            else:
+                st.dataframe(response.df.head(10), use_container_width=True)
+
         if response.result_interpretation:
             st.subheader("Result Interpretation")
             st.markdown(response.result_interpretation)

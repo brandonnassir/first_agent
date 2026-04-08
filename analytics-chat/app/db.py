@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, Optional
 
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
@@ -146,6 +146,24 @@ class Database:
         if result and result[0] >= 0:
             return int(result[0])
         return None
+
+    def get_distinct_values(
+        self, schema: str, table: str, column: str, max_distinct: int = 50
+    ) -> Optional[list]:
+        """Return distinct values for a column if cardinality <= *max_distinct*, else None."""
+        safe_id = f'"{schema}"."{table}"'
+        count_q = text(
+            f'SELECT COUNT(DISTINCT "{column}") FROM {safe_id}'
+        )
+        with self._engine.connect() as conn:
+            count = conn.execute(count_q).scalar() or 0
+            if count > max_distinct:
+                return None
+            vals_q = text(
+                f'SELECT DISTINCT "{column}" FROM {safe_id} '
+                f'WHERE "{column}" IS NOT NULL ORDER BY 1'
+            )
+            return [row[0] for row in conn.execute(vals_q)]
 
     def fetch_sample_rows(self, schema: str, table: str, limit: int = 5) -> list[dict]:
         """Return a small sample of rows for schema context."""

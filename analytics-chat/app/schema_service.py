@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from app.config import AppConfig
 from app.db import Database
@@ -25,12 +25,19 @@ class SchemaService:
 
         sample_rows = self._safe_sample(schema, table)
 
+        _TEXT_TYPES = {"text", "character varying", "character", "varchar", "char"}
+
         columns: list[ColumnMeta] = []
         for col in columns_raw:
             col_name = col["column_name"]
             sample_vals = [
                 row.get(col_name) for row in sample_rows if row.get(col_name) is not None
             ]
+
+            distinct_vals = None
+            if col["data_type"] in _TEXT_TYPES:
+                distinct_vals = self._safe_distinct(schema, table, col_name)
+
             columns.append(
                 ColumnMeta(
                     column_name=col_name,
@@ -38,6 +45,7 @@ class SchemaService:
                     is_nullable=col["is_nullable"],
                     is_primary_key=col_name in pk_cols,
                     sample_values=sample_vals[: self._config.sample_rows],
+                    distinct_values=distinct_vals,
                 )
             )
 
@@ -78,3 +86,12 @@ class SchemaService:
         except Exception:
             logger.warning("Could not fetch sample rows for %s.%s", schema, table)
             return []
+
+    def _safe_distinct(self, schema: str, table: str, column: str) -> Optional[list]:
+        try:
+            return self._db.get_distinct_values(schema, table, column)
+        except Exception:
+            logger.warning(
+                "Could not fetch distinct values for %s.%s.%s", schema, table, column
+            )
+            return None
